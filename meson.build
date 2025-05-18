@@ -77,21 +77,4 @@ foreach _dep : [
 endforeach
 dep_gst += dependency('glib-2.0', required : get_option('gstreamer'))
 
-# See if we found everything we needed
-with_gst = true
-foreach _dep : dep_gst
-  if not _dep.found()
-    with_gst = false
-  endif
-endforeach
-
-if with_gst
-  dep_common += dep_gst
-  sources += files('cube-video.c', 'gst-decoder.c')
-  add_project_arguments('-DHAVE_GST', language : 'c')
-  message('Building with gstreamer support')
-else
-  message('Building without gstreamer support')
-endif
-
 executable('kmscube', sources, dependencies : dep_common, install : true)
