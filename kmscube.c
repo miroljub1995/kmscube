@@ -84,7 +84,6 @@ int main(int argc, char *argv[])
 	const char *device = NULL;
 	const char *shadertoy = NULL;
 	char mode_str[DRM_DISPLAY_MODE_LEN] = "";
-	char *p;
 	enum mode mode = SMOOTH;
 	uint32_t format = DRM_FORMAT_XRGB8888;
 	uint64_t modifier = DRM_FORMAT_MOD_LINEAR;
@@ -93,7 +92,6 @@ int main(int argc, char *argv[])
 	int gears = 0;
 	int connector_id = -1;
 	int opt;
-	unsigned int len;
 	unsigned int vrefresh = 0;
 	unsigned int count = ~0;
 	bool surfaceless = false;
