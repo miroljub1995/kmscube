@@ -41,7 +41,6 @@ sources = files(
   'drm-atomic.c',
   'drm-common.c',
   'drm-legacy.c',
-  'drm-offscreen.c',
   'esTransform.c',
   'frame-512x512-NV12.c',
   'frame-512x512-RGBA.c',

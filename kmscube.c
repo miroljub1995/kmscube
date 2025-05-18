@@ -79,7 +79,6 @@ static void usage(const char *name)
 			"        nv12-1img -  yuv textured (single nv12 texture)\n"
 			"    -m, --modifier=MODIFIER  hardcode the selected modifier\n"
 			"    -n, --connector_id=N     use connector ID N (see drm_info)\n"
-			"    -O, --offscreen          use offscreen rendering (e.g. for render nodes)\n"
 			"    -p, --perfcntr=LIST      sample specified performance counters using\n"
 			"                             the AMD_performance_monitor extension (comma\n"
 			"                             separated list, shadertoy mode only)\n"
@@ -108,7 +107,6 @@ int main(int argc, char *argv[])
 	int samples = 0;
 	int atomic = 0;
 	int gears = 0;
-	int offscreen = 0;
 	int connector_id = -1;
 	int opt;
 	unsigned int len;
@@ -175,9 +173,6 @@ int main(int argc, char *argv[])
 		case 'N':
 			nonblocking = true;
 			break;
-		case 'O':
-			offscreen = 1;
-			break;
 		case 'p':
 			perfcntr = optarg;
 			break;
@@ -214,14 +209,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (offscreen && atomic) {
-		printf("Only one of `--atomic' and `--offscreen' should be specified.\n");
-		return -1;
-	}
-
-	if (offscreen)
-		drm = init_drm_offscreen(device, mode_str, count);
-	else if (atomic)
+	if (atomic)
 		drm = init_drm_atomic(device, mode_str, connector_id, vrefresh, count, nonblocking);
 	else
 		drm = init_drm_legacy(device, mode_str, connector_id, vrefresh, count, nonblocking);
