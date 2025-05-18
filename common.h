@@ -176,25 +176,6 @@ init_cube_shadertoy(const struct gbm *gbm, const char *shadertoy, int samples)
 }
 #endif
 
-#ifdef HAVE_GST
-
-struct decoder;
-struct decoder * video_init(const struct egl *egl, const struct gbm *gbm, const char *filename);
-EGLImage video_frame(struct decoder *dec);
-void video_deinit(struct decoder *dec);
-
-const struct egl * init_cube_video(const struct gbm *gbm, const char *video, int samples);
-
-#else
-static inline const struct egl *
-init_cube_video(const struct gbm *gbm, const char *video, int samples)
-{
-	(void)gbm; (void)video; (void)samples;
-	printf("no GStreamer support!\n");
-	return NULL;
-}
-#endif
-
 #define NSEC_PER_SEC (INT64_C(1000) * USEC_PER_SEC)
 #define USEC_PER_SEC (INT64_C(1000) * MSEC_PER_SEC)
 #define MSEC_PER_SEC INT64_C(1000)

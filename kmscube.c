@@ -32,11 +32,6 @@
 #include "common.h"
 #include "drm-common.h"
 
-#ifdef HAVE_GST
-#include <gst/gst.h>
-GST_DEBUG_CATEGORY(kmscube_debug);
-#endif
-
 static const struct egl *egl;
 static const struct gbm *gbm;
 static const struct drm *drm;
@@ -54,8 +49,6 @@ static const struct option longopts[] = {
 	{"connector_id", required_argument, 0, 'n'},
 	{"offscreen", no_argument,    0, 'O'},
 	{"samples",  required_argument, 0, 's'},
-	{"video",  required_argument, 0, 'V'},
-	{"vmode",  required_argument, 0, 'v'},
 	{"surfaceless", no_argument,  0, 'x'},
 	{"nonblocking", no_argument,  0, 'N'},
 	{0, 0, 0, 0}
@@ -80,9 +73,6 @@ static void usage(const char *name)
 			"    -n, --connector_id=N     use connector ID N (see drm_info)\n"
 			"    -S, --shadertoy=FILE     use specified shadertoy shader\n"
 			"    -s, --samples=N          use MSAA\n"
-			"    -V, --video=FILE         video textured cube (comma separated list)\n"
-			"    -v, --vmode=VMODE        specify the video mode in the format\n"
-			"                             <mode>[-<vrefresh>]\n"
 			"    -x, --surfaceless        use surfaceless mode, instead of gbm surface\n"
 			"    -N, --nonblocking        do not poll for input\n"
 			,
@@ -92,7 +82,6 @@ static void usage(const char *name)
 int main(int argc, char *argv[])
 {
 	const char *device = NULL;
-	const char *video = NULL;
 	const char *shadertoy = NULL;
 	char mode_str[DRM_DISPLAY_MODE_LEN] = "";
 	char *p;
@@ -109,11 +98,6 @@ int main(int argc, char *argv[])
 	unsigned int count = ~0;
 	bool surfaceless = false;
 	bool nonblocking = false;
-
-#ifdef HAVE_GST
-	gst_init(&argc, &argv);
-	GST_DEBUG_CATEGORY_INIT(kmscube_debug, "kmscube", 0, "kmscube video pipeline");
-#endif
 
 	while ((opt = getopt_long_only(argc, argv, shortopts, longopts, NULL)) != -1) {
 		switch (opt) {
@@ -175,23 +159,6 @@ int main(int argc, char *argv[])
 		case 's':
 			samples = strtoul(optarg, NULL, 0);
 			break;
-		case 'V':
-			mode = VIDEO;
-			video = optarg;
-			break;
-		case 'v':
-			p = strchr(optarg, '-');
-			if (p == NULL) {
-				len = strlen(optarg);
-			} else {
-				vrefresh = strtoul(p + 1, NULL, 0);
-				len = p - optarg;
-			}
-			if (len > sizeof(mode_str) - 1)
-				len = sizeof(mode_str) - 1;
-			strncpy(mode_str, optarg, len);
-			mode_str[len] = '\0';
-			break;
 		case 'x':
 			surfaceless = true;
 			break;
@@ -221,8 +188,6 @@ int main(int argc, char *argv[])
 		egl = init_cube_gears(gbm, samples);
 	else if (mode == SMOOTH)
 		egl = init_cube_smooth(gbm, samples);
-	else if (mode == VIDEO)
-		egl = init_cube_video(gbm, video, samples);
 	else if (mode == SHADERTOY)
 		egl = init_cube_shadertoy(gbm, shadertoy, samples);
 	else
