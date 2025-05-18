@@ -57,16 +57,6 @@ dep_gbm = dependency('gbm', version : '>=13.0')
 dep_egl = dependency('egl')
 dep_gles2 = dependency('glesv2')
 
-with_gles3 = cc.check_header('GLES3/gl3.h', dependencies: dep_gles2)
-
-if with_gles3
-  sources += files('cube-shadertoy.c')
-  add_project_arguments('-DHAVE_GLES3', language : 'c')
-  message('GLES3 supported; shadertoy & texturator are included in this build')
-else
-  warning('GLES3 not supported; shadertoy & texturator are NOT included in this build')
-endif
-
 dep_libpng = dependency('libpng', required : false)
 
 if dep_libpng.found()
@@ -105,13 +95,3 @@ else
 endif
 
 executable('kmscube', sources, dependencies : dep_common, install : true)
-
-if with_gles3
-  executable('texturator', files(
-    'common.c',
-    'drm-legacy.c',
-    'drm-common.c',
-    'perfcntrs.c',  # not used, but required to link
-    'texturator.c',
-  ), dependencies : dep_common, install : true)
-endif
