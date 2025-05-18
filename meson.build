@@ -36,7 +36,6 @@ endif
 sources = files(
   'common.c',
   'cube-smooth.c',
-  'cube-gears.c',
   'cube-tex.c',
   'drm-atomic.c',
   'drm-common.c',
