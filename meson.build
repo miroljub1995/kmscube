@@ -57,24 +57,6 @@ dep_gbm = dependency('gbm', version : '>=13.0')
 dep_egl = dependency('egl')
 dep_gles2 = dependency('glesv2')
 
-dep_libpng = dependency('libpng', required : false)
-
-if dep_libpng.found()
-  add_project_arguments('-DHAVE_LIBPNG', language : 'c')
-endif
-
-dep_common = [dep_m, dep_threads, dep_libdrm, dep_gbm, dep_egl, dep_gles2, dep_libpng]
-
-dep_gst = []
-foreach _dep : [
-  'gstreamer-1.0',
-  'gstreamer-plugins-base-1.0',
-  'gstreamer-app-1.0',
-  'gstreamer-allocators-1.0',
-  'gstreamer-video-1.0',
-]
-  dep_gst += dependency(_dep, version : '>= 1.22.0', required : get_option('gstreamer'))
-endforeach
-dep_gst += dependency('glib-2.0', required : get_option('gstreamer'))
+dep_common = [dep_m, dep_threads, dep_libdrm, dep_gbm, dep_egl, dep_gles2]
 
 executable('kmscube', sources, dependencies : dep_common, install : true)
