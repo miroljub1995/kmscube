@@ -47,7 +47,6 @@ static const struct option longopts[] = {
 	{"mode",   required_argument, 0, 'M'},
 	{"modifier", required_argument, 0, 'm'},
 	{"connector_id", required_argument, 0, 'n'},
-	{"offscreen", no_argument,    0, 'O'},
 	{"samples",  required_argument, 0, 's'},
 	{"surfaceless", no_argument,  0, 'x'},
 	{"nonblocking", no_argument,  0, 'N'},
@@ -71,7 +70,6 @@ static void usage(const char *name)
 			"        nv12-1img -  yuv textured (single nv12 texture)\n"
 			"    -m, --modifier=MODIFIER  hardcode the selected modifier\n"
 			"    -n, --connector_id=N     use connector ID N (see drm_info)\n"
-			"    -S, --shadertoy=FILE     use specified shadertoy shader\n"
 			"    -s, --samples=N          use MSAA\n"
 			"    -x, --surfaceless        use surfaceless mode, instead of gbm surface\n"
 			"    -N, --nonblocking        do not poll for input\n"
@@ -82,7 +80,6 @@ static void usage(const char *name)
 int main(int argc, char *argv[])
 {
 	const char *device = NULL;
-	const char *shadertoy = NULL;
 	char mode_str[DRM_DISPLAY_MODE_LEN] = "";
 	enum mode mode = SMOOTH;
 	uint32_t format = DRM_FORMAT_XRGB8888;
@@ -150,10 +147,6 @@ int main(int argc, char *argv[])
 		case 'N':
 			nonblocking = true;
 			break;
-		case 'S':
-			mode = SHADERTOY;
-			shadertoy = optarg;
-			break;
 		case 's':
 			samples = strtoul(optarg, NULL, 0);
 			break;
@@ -186,8 +179,6 @@ int main(int argc, char *argv[])
 		egl = init_cube_gears(gbm, samples);
 	else if (mode == SMOOTH)
 		egl = init_cube_smooth(gbm, samples);
-	else if (mode == SHADERTOY)
-		egl = init_cube_shadertoy(gbm, shadertoy, samples);
 	else
 		egl = init_cube_tex(gbm, mode, samples);
 

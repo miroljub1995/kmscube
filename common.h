@@ -157,24 +157,11 @@ enum mode {
 	NV12_2IMG,     /* NV12, handled as two textures and converted to RGB in shader */
 	NV12_1IMG,     /* NV12, imported as planar YUV eglimg */
 	VIDEO,         /* video textured cube */
-	SHADERTOY,     /* display shadertoy shader */
 };
 
 const struct egl * init_cube_smooth(const struct gbm *gbm, int samples);
 const struct egl * init_cube_tex(const struct gbm *gbm, enum mode mode, int samples);
 const struct egl * init_cube_gears(const struct gbm *gbm, int samples);
-
-#ifdef HAVE_GLES3
-const struct egl * init_cube_shadertoy(const struct gbm *gbm, const char *shadertoy, int samples);
-#else
-static inline const struct egl *
-init_cube_shadertoy(const struct gbm *gbm, const char *shadertoy, int samples)
-{
-	(void)gbm; (void)shadertoy; (void)samples;
-	printf("no GLES3 support!\n");
-	return NULL;
-}
-#endif
 
 #define NSEC_PER_SEC (INT64_C(1000) * USEC_PER_SEC)
 #define USEC_PER_SEC (INT64_C(1000) * MSEC_PER_SEC)
