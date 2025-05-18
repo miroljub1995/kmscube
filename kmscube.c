@@ -62,7 +62,6 @@ static void usage(const char *name)
 			"    -c, --count=N            run for the specified number of frames\n"
 			"    -D, --device=DEVICE      use the given device\n"
 			"    -f, --format=FOURCC      framebuffer format\n"
-			"    -g, --gears              render gears on each cube face\n"
 			"    -M, --mode=MODE          specify mode, one of:\n"
 			"        smooth    -  smooth shaded cube (default)\n"
 			"        rgba      -  rgba textured cube\n"
@@ -86,7 +85,6 @@ int main(int argc, char *argv[])
 	uint64_t modifier = DRM_FORMAT_MOD_LINEAR;
 	int samples = 0;
 	int atomic = 0;
-	int gears = 0;
 	int connector_id = -1;
 	int opt;
 	unsigned int vrefresh = 0;
@@ -120,9 +118,6 @@ int main(int argc, char *argv[])
 					     fourcc[2], fourcc[3]);
 			break;
 		}
-		case 'g':
-			gears = 1;
-			break;
 		case 'M':
 			if (strcmp(optarg, "smooth") == 0) {
 				mode = SMOOTH;
@@ -175,9 +170,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	if (gears)
-		egl = init_cube_gears(gbm, samples);
-	else if (mode == SMOOTH)
+	if (mode == SMOOTH)
 		egl = init_cube_smooth(gbm, samples);
 	else
 		egl = init_cube_tex(gbm, mode, samples);

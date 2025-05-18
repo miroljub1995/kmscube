@@ -160,7 +160,6 @@ enum mode {
 
 const struct egl * init_cube_smooth(const struct gbm *gbm, int samples);
 const struct egl * init_cube_tex(const struct gbm *gbm, enum mode mode, int samples);
-const struct egl * init_cube_gears(const struct gbm *gbm, int samples);
 
 #define NSEC_PER_SEC (INT64_C(1000) * USEC_PER_SEC)
 #define USEC_PER_SEC (INT64_C(1000) * MSEC_PER_SEC)
