@@ -214,9 +214,7 @@ int main(int argc, char *argv[])
 	else
 		drm = init_drm_legacy(device, mode_str, connector_id, vrefresh, count, nonblocking);
 	if (!drm) {
-		printf("failed to initialize %s DRM\n",
-		       offscreen ? "offscreen" :
-		       atomic ? "atomic" : "legacy");
+		printf("failed to initialize %s DRM\n", atomic ? "atomic" : "legacy");
 		return -1;
 	}
 
