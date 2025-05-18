@@ -45,7 +45,6 @@ sources = files(
   'frame-512x512-NV12.c',
   'frame-512x512-RGBA.c',
   'kmscube.c',
-  'perfcntrs.c',
 )
 
 cc = meson.get_compiler('c')

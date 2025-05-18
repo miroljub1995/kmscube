@@ -53,7 +53,6 @@ static const struct option longopts[] = {
 	{"modifier", required_argument, 0, 'm'},
 	{"connector_id", required_argument, 0, 'n'},
 	{"offscreen", no_argument,    0, 'O'},
-	{"perfcntr", required_argument, 0, 'p'},
 	{"samples",  required_argument, 0, 's'},
 	{"video",  required_argument, 0, 'V'},
 	{"vmode",  required_argument, 0, 'v'},
@@ -79,9 +78,6 @@ static void usage(const char *name)
 			"        nv12-1img -  yuv textured (single nv12 texture)\n"
 			"    -m, --modifier=MODIFIER  hardcode the selected modifier\n"
 			"    -n, --connector_id=N     use connector ID N (see drm_info)\n"
-			"    -p, --perfcntr=LIST      sample specified performance counters using\n"
-			"                             the AMD_performance_monitor extension (comma\n"
-			"                             separated list, shadertoy mode only)\n"
 			"    -S, --shadertoy=FILE     use specified shadertoy shader\n"
 			"    -s, --samples=N          use MSAA\n"
 			"    -V, --video=FILE         video textured cube (comma separated list)\n"
@@ -98,7 +94,6 @@ int main(int argc, char *argv[])
 	const char *device = NULL;
 	const char *video = NULL;
 	const char *shadertoy = NULL;
-	const char *perfcntr = NULL;
 	char mode_str[DRM_DISPLAY_MODE_LEN] = "";
 	char *p;
 	enum mode mode = SMOOTH;
@@ -173,9 +168,6 @@ int main(int argc, char *argv[])
 		case 'N':
 			nonblocking = true;
 			break;
-		case 'p':
-			perfcntr = optarg;
-			break;
 		case 'S':
 			mode = SHADERTOY;
 			shadertoy = optarg;
@@ -239,14 +231,6 @@ int main(int argc, char *argv[])
 	if (!egl) {
 		printf("failed to initialize EGL\n");
 		return -1;
-	}
-
-	if (perfcntr) {
-		if (mode != SHADERTOY) {
-			printf("performance counters only supported in shadertoy mode\n");
-			return -1;
-		}
-		init_perfcntrs(egl, perfcntr);
 	}
 
 	/* clear the color buffer */
